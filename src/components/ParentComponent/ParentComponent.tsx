@@ -1,10 +1,11 @@
-import ChildComponent from "../ChildComponent/ChildComponent";
+import BugComponent from "../BugComponent/BugComponent";
+import GroceriesComponent from "../GroceriesComponent/GroceriesComponent";
 
 const ParentComponent = () => {
   return (
     <div>
-      <h1>Parent Component</h1>
-      <ChildComponent />
+      <GroceriesComponent />
+      <BugComponent />
     </div>
   );
 };

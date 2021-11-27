@@ -1,13 +1,15 @@
-import React, { SyntheticEvent, useContext } from "react";
+import { SyntheticEvent, useContext } from "react";
 import { StoreContext } from "../../App";
 import { useObserver } from "mobx-react";
 
-const ChildComponent = () => {
+const GroceriesComponent = () => {
   const store = useContext(StoreContext);
-  const { itemsInStock, cart, addToCart } = store;
+  const { groceriesStore } = store;
+  const { itemsInStock, cart, addToCart } = groceriesStore;
 
   const handleAddToCart = (e: SyntheticEvent) => {
-    addToCart((e.target as HTMLElement).innerHTML);
+    const item = (e.target as HTMLElement).innerHTML;
+    addToCart(item);
   };
 
   const renderUIItems = () => {
@@ -37,4 +39,4 @@ const ChildComponent = () => {
   return useObserver(() => renderUIItems());
 };
 
-export default ChildComponent;
+export default GroceriesComponent;

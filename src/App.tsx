@@ -1,41 +1,50 @@
-import { createContext, FC, useState } from "react";
+import { createContext, FC } from "react";
 import ParentComponent from "./components/ParentComponent/ParentComponent";
-import { useLocalStore } from "mobx-react";
+import { Store1 } from "./store1";
+import { Store2 } from "./store2";
 
-export interface IStoreContext {
+export interface IGroceriesStoreContext {
   itemsInStock: string[];
   cart: string[];
   addToCart: (item: string) => void;
 }
 
-export const StoreContext = createContext<IStoreContext>({
-  itemsInStock: [],
-  cart: [],
-  addToCart: Function,
-});
+export interface IBugsStoreContext {
+  bugsList: string[];
+  selectedBugs: string[];
+  selectBug: (item: string) => void;
+}
+
+export interface IRootStoreContext {
+  groceriesStore: IGroceriesStoreContext;
+  bugsStore: IBugsStoreContext;
+}
+
+export const StoreContext = createContext<IRootStoreContext>(
+  {} as IRootStoreContext
+);
 
 export interface StoreProviderProps {
   children: any;
 }
 
 const StoreProvider: FC<StoreProviderProps> = ({ children }) => {
-  const store: IStoreContext = useLocalStore(() => ({
-    itemsInStock: ["item1", "item2", "item3"],
-    cart: [],
-    addToCart: (item: string) => {
-      store.cart.push(item);
-    },
-  }));
+  const groceriesStore = new Store1();
+  const bugsStore = new Store2();
+
+  const rootStore = {
+    groceriesStore,
+    bugsStore,
+  };
 
   return (
-    <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+    <StoreContext.Provider value={rootStore}>{children}</StoreContext.Provider>
   );
 };
 
 const App = () => {
   return (
     <StoreProvider>
-      <h1>App</h1>
       <ParentComponent />
     </StoreProvider>
   );
