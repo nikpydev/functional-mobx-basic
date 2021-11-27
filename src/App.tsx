@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createContext, FC, useState } from "react";
+import ParentComponent from "./components/ParentComponent/ParentComponent";
+import { useLocalStore } from "mobx-react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export interface IStoreContext {
+  itemsInStock: string[];
+  cart: string[];
+  addToCart: (item: string) => void;
 }
+
+export const StoreContext = createContext<IStoreContext>({
+  itemsInStock: [],
+  cart: [],
+  addToCart: Function,
+});
+
+export interface StoreProviderProps {
+  children: any;
+}
+
+const StoreProvider: FC<StoreProviderProps> = ({ children }) => {
+  const store: IStoreContext = useLocalStore(() => ({
+    itemsInStock: ["item1", "item2", "item3"],
+    cart: [],
+    addToCart: (item: string) => {
+      store.cart.push(item);
+    },
+  }));
+
+  return (
+    <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+  );
+};
+
+const App = () => {
+  return (
+    <StoreProvider>
+      <h1>App</h1>
+      <ParentComponent />
+    </StoreProvider>
+  );
+};
 
 export default App;
